@@ -1,0 +1,33 @@
+{
+    "require": {
+        "slim/slim": "^4.14"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.12",
+        "pestphp/pest-plugin-laravel": "^2.4",
+        "nunomaduro/phpinsights": "^2.11"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src",
+            "Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "rall" : [
+            "@test",
+            "@lint",
+            "@insights"
+        ],
+        "test": "vendor/bin/pest",
+        "lint": "vendor/bin/phpstan analyse src tests --level max",
+        "insights": "vendor/bin/phpinsights",
+        "fix": "vendor/bin/phpinsights --fix"
+    }
+}
