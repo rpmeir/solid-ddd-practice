@@ -1,16 +1,19 @@
 {
     "require": {
-        "slim/slim": "^4.14"
+        "ramsey/uuid": "^4.7",
+        "clue/framework-x": "^0.16"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.12",
         "pestphp/pest-plugin-laravel": "^2.4",
-        "nunomaduro/phpinsights": "^2.11"
+        "nunomaduro/phpinsights": "^2.11",
+        "minicli/pest-plugin-curly": "^0.2.1"
     },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "minicli/pest-plugin-curly": true
         }
     },
     "autoload": {
