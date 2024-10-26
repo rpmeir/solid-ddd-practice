@@ -12,7 +12,7 @@ abstract class Reservation
         public readonly string $email,
         public readonly \DateTimeImmutable $checkinDate,
         public readonly \DateTimeImmutable $checkoutDate,
-        private readonly string $status,
+        private string $status,
         protected float $price = 0,
         protected int $duration = 0
     ) {

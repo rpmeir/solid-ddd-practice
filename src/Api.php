@@ -6,6 +6,7 @@ use FrameworkX\App;
 use React\Http\Message\Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Src\CancelReservation;
+use Src\DeleteAllReservations;
 use Src\GetReservation;
 use Src\MakeReservation;
 
@@ -41,6 +42,12 @@ $app->get('/reservations/{reservationId}', function (ServerRequestInterface $req
     $getReservation = new GetReservation($reservationRepository);
     $reservation = $getReservation->execute($reservationId);
     return Response::json($reservation);
+});
+
+$app->post('/delete_all_reservations', function () use ($reservationRepository) {
+    $deleteReservations = new DeleteAllReservations($reservationRepository);
+    $deleteReservations->execute();
+    return Response::plaintext('Reservations deleted');
 });
 
 $app->run();

@@ -10,8 +10,19 @@ class GetReservation
     {
     }
 
-    public function execute($reservationId): Reservation
+    public function execute($reservationId): object
     {
-        return $this->reservationRepository->getReservationById($reservationId);
+        $reservation = $this->reservationRepository->getReservationById($reservationId);
+        // returning DTO instead of object because of inaccessible properties (limitations of HTTP client used in tests)
+        return (object) [
+            'reservationId' => $reservation->reservationId,
+            'roomId' => $reservation->roomId,
+            'email' => $reservation->email,
+            'checkinDate' => $reservation->checkinDate,
+            'checkoutDate' => $reservation->checkoutDate,
+            'status' => $reservation->getStatus(),
+            'price' => $reservation->getPrice(),
+            'duration' => $reservation->getDuration(),
+        ];
     }
 }

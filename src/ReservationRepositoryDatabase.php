@@ -49,7 +49,13 @@ class ReservationRepositoryDatabase implements ReservationRepository
             'duration' => (int) $reservation['duration'],
             'type' => $reservation['type'],
         ];
-        $reserv = ReservationFactory::restore($reservationDTO);
-        return $reserv;
+        return ReservationFactory::restore($reservationDTO);
+    }
+
+    public function deleteAllReservations(): void
+    {
+        $connection = new \PDO(self::CONNECTION_STRING, 'postgres', self::PASSWORD);
+        $statement = $connection->prepare("DELETE FROM sdp.reservations");
+        $statement->execute();
     }
 }
