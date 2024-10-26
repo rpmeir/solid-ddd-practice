@@ -7,7 +7,8 @@
         "phpstan/phpstan": "^1.12",
         "pestphp/pest-plugin-laravel": "^2.4",
         "nunomaduro/phpinsights": "^2.11",
-        "minicli/pest-plugin-curly": "^0.2.1"
+        "minicli/pest-plugin-curly": "^0.2.1",
+        "pestphp/pest": "^2.36"
     },
     "config": {
         "allow-plugins": {

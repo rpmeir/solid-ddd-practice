@@ -1,3 +1,3 @@
 # solid-ddd-practice
 
-30 minutos
+130 minutos

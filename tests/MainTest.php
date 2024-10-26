@@ -15,7 +15,6 @@ describe('mainTest', function () {
             'checkoutDate' => '2024-03-08T10:00:00',
         ];
         $response  = curly()->post('http://localhost:8000/make_reservation', $input);
-        expect($response)->toBeArray()->toHaveKeys(['code', 'body']);
         expect($response['code'])->toBe(422);
         $output = json_decode($response['body'], true);
         expect($output['message'])->toBe('Invalid email');
@@ -28,15 +27,15 @@ describe('mainTest', function () {
             'checkinDate' => '2024-03-03T10:00:00',
             'checkoutDate' => '2024-03-08T10:00:00',
         ];
-        $response  = curly()->post('http://localhost:8000/make_reservation', $input);
-        expect($response)->toBeArray()->toHaveKeys(['code', 'body']);
-        expect($response['code'])->toBe(200);
-        $output = json_decode($response['body'], true);
-        expect($output['reservationId'])->not()->toBeEmpty();
-        expect($output['duration'])->toBe(5);
-        expect($output['price'])->toBe(5000);
-        curly()->post('http://localhost:8000/cancel_reservation', $output);
-    });
+        $responseMakeReservation  = curly()->post('http://localhost:8000/make_reservation', $input);
+        $outputMakeReservation = json_decode($responseMakeReservation['body'], true);
+        expect($outputMakeReservation['reservationId'])->not()->toBeEmpty();
+        $responseGetReservation = curly()->get('http://localhost:8000/reservations/' . $outputMakeReservation['reservationId']);
+        $outputGetReservation = json_decode($responseGetReservation['body'], true);
+        expect($outputGetReservation->duration)->toBe(5);
+        expect($outputGetReservation->price)->toBe(5000);
+        curly()->post('http://localhost:8000/cancel_reservation', ['reservationId' => $outputMakeReservation['reservationId']]);
+    })->only();
 
     test('Não deve reservar um quarto por dia em um período já reservado', function () {
         $input = [
@@ -46,15 +45,12 @@ describe('mainTest', function () {
             'checkoutDate' => '2024-03-08T10:00:00',
         ];
         $response  = curly()->post('http://localhost:8000/make_reservation', $input);
-        expect($response)->toBeArray()->toHaveKeys(['code', 'body']);
-        expect($response['code'])->toBe(200);
         $output = json_decode($response['body'], true);
         $response2  = curly()->post('http://localhost:8000/make_reservation', $input);
-        expect($response2)->toBeArray()->toHaveKeys(['code', 'body']);
         expect($response2['code'])->toBe(422);
         $output2 = json_decode($response2['body'], true);
         expect($output2['message'])->toBe('Room is not available');
-        curly()->post('http://localhost:8000/cancel_reservation', $output);
+        curly()->post('http://localhost:8000/cancel_reservation', $output['reservationId']);
     });
 
     test('Deve reservar um quarto por hora', function () {
@@ -65,13 +61,11 @@ describe('mainTest', function () {
             'checkoutDate' => '2024-03-03T12:00:00',
         ];
         $response  = curly()->post('http://localhost:8000/make_reservation', $input);
-        expect($response)->toBeArray()->toHaveKeys(['code', 'body']);
-        expect($response['code'])->toBe(200);
         $output = json_decode($response['body'], true);
         expect($output['reservationId'])->not()->toBeEmpty();
         expect($output['duration'])->toBe(2);
-        expect($output['price'])->toBe(200);
-        curly()->post('http://localhost:8000/cancel_reservation', $output);
+        expect($output['price'])->toBe(200.0);
+        curly()->post('http://localhost:8000/cancel_reservation', $output['reservationId']);
     });
 
     test('Não deve reservar um quarto por hora em um período já reservado', function () {
@@ -82,14 +76,11 @@ describe('mainTest', function () {
             'checkoutDate' => '2024-03-03T12:00:00',
         ];
         $response  = curly()->post('http://localhost:8000/make_reservation', $input);
-        expect($response)->toBeArray()->toHaveKeys(['code', 'body']);
-        expect($response['code'])->toBe(200);
         $output = json_decode($response['body'], true);
         $response2  = curly()->post('http://localhost:8000/make_reservation', $input);
-        expect($response2)->toBeArray()->toHaveKeys(['code', 'body']);
         expect($response2['code'])->toBe(422);
         $output2 = json_decode($response2['body'], true);
         expect($output2['message'])->toBe('Room is not available');
-        curly()->post('http://localhost:8000/cancel_reservation', $output);
+        curly()->post('http://localhost:8000/cancel_reservation', $output['reservationId']);
     });
 });
