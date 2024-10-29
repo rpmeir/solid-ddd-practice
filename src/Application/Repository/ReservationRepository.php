@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Src;
+namespace Src\Application\Repository;
+
+use Src\Domain\Reservation;
 
 interface ReservationRepository
 {
     /**
      * Summary of getActiveReservations
+     *
      * @return array<Reservation>
      */
     public function hasActiveReservations(string $roomId, string $checkinDate, string $checkoutDate): bool;

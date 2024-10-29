@@ -2,20 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Src;
+namespace Src\Domain;
 
 abstract class Reservation
 {
+    protected Period $period;
+    private Email $email;
+
     public function __construct(
         public readonly string $reservationId,
         public readonly string $roomId,
-        public readonly string $email,
+        public string $emailString,
         public readonly \DateTimeImmutable $checkinDate,
         public readonly \DateTimeImmutable $checkoutDate,
         private string $status,
         protected float $price = 0,
         protected int $duration = 0
     ) {
+        $this->email = new Email($emailString);
+        $this->period = new Period($checkinDate, $checkoutDate);
     }
 
     public function cancel(): void
@@ -39,6 +44,11 @@ abstract class Reservation
     public function getDuration(): int
     {
         return $this->duration;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email->getValue();
     }
 
     abstract public function calculate(Room $room): void;

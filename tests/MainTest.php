@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Src\Reservation;
+use Src\Domain\Reservation;
 use function Minicli\PestCurlyPlugin\curly;
 
 describe('mainTest', function () {

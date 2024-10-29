@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Src;
+namespace Src\Application\Usecase;
+
+use Src\Application\Repository\ReservationRepository;
 
 class DeleteAllReservations
 {

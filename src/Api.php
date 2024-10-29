@@ -3,23 +3,27 @@
 declare(strict_types=1);
 
 use FrameworkX\App;
-use React\Http\Message\Response;
 use Psr\Http\Message\ServerRequestInterface;
-use Src\CancelReservation;
-use Src\DeleteAllReservations;
-use Src\GetReservation;
-use Src\MakeReservation;
+use React\Http\Message\Response;
+use Src\Application\Usecase\CancelReservation;
+use Src\Application\Usecase\DeleteAllReservations;
+use Src\Application\Usecase\GetReservation;
+use Src\Application\Usecase\MakeReservation;
+use Src\Infra\PostgresDatabaseAdapter;
+use Src\Infra\Repository\Database\ReservationRepositoryDatabase;
+use Src\Infra\Repository\Database\RoomRepositoryDatabase;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$reservationRepository = new Src\ReservationRepositoryDatabase();
-$roomRepository = new Src\RoomRepositoryDatabase();
+$connection = new PostgresDatabaseAdapter();
+$reservationRepository = new ReservationRepositoryDatabase($connection);
+$roomRepository = new RoomRepositoryDatabase($connection);
 
 $app = new App();
 
-$app->get('/', fn() => Response::plaintext("Hello world!"));
+$app->get('/', static fn () => Response::plaintext('Hello world!'));
 
-$app->post('/make_reservation', function (ServerRequestInterface $request) use ($reservationRepository, $roomRepository) {
+$app->post('/make_reservation', static function (ServerRequestInterface $request) use ($reservationRepository, $roomRepository) {
     $input = json_decode((string) $request->getBody());
     try {
         $makeReservation = new MakeReservation($reservationRepository, $roomRepository);
@@ -30,21 +34,21 @@ $app->post('/make_reservation', function (ServerRequestInterface $request) use (
     }
 });
 
-$app->post('/cancel_reservation', function (ServerRequestInterface $request) use ($reservationRepository) {
+$app->post('/cancel_reservation', static function (ServerRequestInterface $request) use ($reservationRepository) {
     $input = json_decode((string) $request->getBody());
     $cancelReservation = new CancelReservation($reservationRepository);
     $cancelReservation->execute($input->reservationId);
     return Response::plaintext('Reservation cancelled');
 });
 
-$app->get('/reservations/{reservationId}', function (ServerRequestInterface $request) use ($reservationRepository) {
+$app->get('/reservations/{reservationId}', static function (ServerRequestInterface $request) use ($reservationRepository) {
     $reservationId = $request->getAttribute('reservationId');
     $getReservation = new GetReservation($reservationRepository);
     $reservation = $getReservation->execute($reservationId);
     return Response::json($reservation);
 });
 
-$app->post('/delete_all_reservations', function () use ($reservationRepository) {
+$app->post('/delete_all_reservations', static function () use ($reservationRepository) {
     $deleteReservations = new DeleteAllReservations($reservationRepository);
     $deleteReservations->execute();
     return Response::plaintext('Reservations deleted');

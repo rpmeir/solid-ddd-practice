@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Src;
+namespace Src\Application\Usecase;
+
+use Src\Application\Repository\ReservationRepository;
 
 class CancelReservation
 {
@@ -10,7 +12,7 @@ class CancelReservation
     {
     }
 
-    public function execute(string $reservationId)
+    public function execute(string $reservationId): void
     {
         $reservation = $this->reservationRepository->getReservationById($reservationId);
         $reservation->cancel();

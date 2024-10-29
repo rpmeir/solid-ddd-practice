@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Src;
+namespace Src\Application\Repository;
+
+use Src\Domain\Room;
 
 interface RoomRepository
 {

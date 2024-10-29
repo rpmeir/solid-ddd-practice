@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Src;
+namespace Src\Application\Usecase;
+
+use Src\Application\Repository\ReservationRepository;
 
 class GetReservation
 {
@@ -17,7 +19,7 @@ class GetReservation
         return (object) [
             'reservationId' => $reservation->reservationId,
             'roomId' => $reservation->roomId,
-            'email' => $reservation->email,
+            'email' => $reservation->emailString,
             'checkinDate' => $reservation->checkinDate,
             'checkoutDate' => $reservation->checkoutDate,
             'status' => $reservation->getStatus(),

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src;
+namespace Src\Domain;
 
 use Ramsey\Uuid\Uuid;
 
@@ -10,7 +10,7 @@ class DayReservation extends Reservation
 {
     public function calculate(Room $room): void
     {
-        $this->duration = $this->checkinDate->diff($this->checkoutDate)->days;
+        $this->duration = $this->period->getDiffInDays();
         $this->price = $this->duration * $room->price;
     }
 
